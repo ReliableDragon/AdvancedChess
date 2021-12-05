@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <title>Advanced Chess</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type=text/javascript src="{{ url_for('static', filename='home.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="../static/style.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="mainbox">
+    <div class="startpage">
+      <div class="header">Advanced Chess</div>
+      <div class="actions">
+        <div class='newgame homebutton'>
+          Start New Game
+        </div>
+        <div id="joingameform">
+          <input id="submitjoingame" class='homebutton' type="submit" value="Join Game:" />
+          <input id="joingameid" name="joingameid" placeholder="Game ID" type="text" />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

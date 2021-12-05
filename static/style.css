@@ -1,0 +1,86 @@
+:root {
+  --main-accent-color: rgb(40, 71, 144);
+  --main-border-color: #8e8d8f;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background: linear-gradient(130deg,  #1a1a1b 0%, #323234 48%,  #1a1a1b 100%);
+  background-size: cover;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.mainbox {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-top: 50px;
+  border-radius: 5px;
+  border: 2px solid var(--main-border-color);
+  box-shadow: 5px 5px 10px var(--main-accent-color);
+  background-color: rgb(52, 52, 51);
+  min-width: 50%;
+  max-width: 95%;
+  max-height: 95%;
+  margin-bottom: 50px;
+}
+
+.homebutton {
+  font-size: 6vw;
+  font-family: fantasy;
+  cursor:default;
+  text-align: center;
+  background-color: var(--main-border-color);
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.homebutton:hover {
+  background-color: #6e6d6f;
+}
+
+#joingameform {
+  display: flex;
+  flex-direction: column;
+}
+
+#joingameid {
+  height: 100%;
+  line-height: 50px;
+  background: black;
+  color: rgb(80, 111, 184);
+  font-weight: bolder;
+  font-size: 6vw;
+  width: auto;
+}
+
+.header {
+  align-content: center;
+  color: var(--main-accent-color);
+  display: inline-block;
+  font-size: 6vw;
+  font-weight: bolder;
+  text-align: center;
+  text-shadow: -1px -1px 0 #99F, 1px -1px 0 #99F, -1px 1px 0 #99F, 1px 1px 0 #99F;
+  width: 100%;
+  vertical-align: top;
+}
+
+.actions {
+  padding-top: 2em;
+}

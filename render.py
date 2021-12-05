@@ -38,7 +38,8 @@ class Render(tk.Canvas):
     pieces = {}
     positions = {}
 
-    def __init__(self, move_handler, params):
+    def __init__(self, valid_moves, move_handler, params):
+        self.valid_moves = valid_moves
         self.move_handler = move_handler
         self.params = params
         root = tk.Tk()
@@ -111,7 +112,6 @@ class Render(tk.Canvas):
             return
         at_loc = self.positions[cell]
         logger.info("At {} is: {}".format(cell, at_loc))
-        event.
 
     def enter(self, event):
         for i in self.pattern_graphics:

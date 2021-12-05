@@ -1,0 +1,67 @@
+@import "style.css";
+
+:root {
+  --light-square-color: rgb(255, 206, 158);
+  --dark-square-color: rgb(209, 139, 71);
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.board {
+  border: 2px solid var(--main-border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.black_square {
+  background-color: var(--dark-square-color);
+}
+
+.white_square {
+  background-color: var(--light-square-color);
+}
+
+.square {
+  height: 5em;
+  width: 5em;
+  position: relative;
+}
+
+.row {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.piece {
+  height: 100%;
+  width: 100%;
+}
+
+.valid_move {
+  opacity: 50%;
+  background: rgb(110, 200, 90);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.valid_attack {
+  opacity: 50%;
+  background: rgb(210, 50, 80);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

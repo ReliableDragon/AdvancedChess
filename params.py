@@ -2,7 +2,8 @@
 
 class Params():
 
-    def __init__(self, height=8, width=8, piece_order="DEFAULT"):
+    def __init__(self, height=8, width=8, piece_order="DEFAULT",
+                en_passant="STANDARD"):
         self.height = height
         self.width = width
         self.piece_order = piece_order

@@ -1,6 +1,7 @@
 from chess import Chess
 from flask import Flask, render_template, redirect, request
 import json
+from invalid_move_error import InvalidMoveError
 
 app = Flask(__name__)
 chess = Chess()
@@ -31,7 +32,6 @@ def setup_game(ruleset=None):
 def start_game(ruleset=None):
     # We accept non-JSON responses in case the rules are "STANDARD".
     rules = request.get_data()
-    print(rules)
     game_id = chess.start_game(rules)
     return json.dumps({'game_id': game_id}), 200
 
@@ -52,3 +52,16 @@ def play_game(game_id=None):
         return render_template('game.html', game_id=game_id)
     else:
         return render_template('bad_game.html', game_id=game_id)
+
+@app.route("/move/", methods=['POST'])
+def make_move():
+    if not request.is_json:
+        print(f"Got bad json: {request.get_data()}")
+        return f"Unable to parse move: {request.get_data()}", 400
+    data = request.get_json()
+    try:
+        response = chess.make_move(data['game_id'], data['move_data'])
+    except InvalidMoveError as e:
+        print("Invalid move!")
+        return f"Invalid move: {str(e)}", 400
+    return json.dumps(response)

@@ -96,3 +96,25 @@ html {
 #active_color {
   margin-left: 0.25em;
 }
+
+.game_elements {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls {
+  position: relative;
+  align-content: center;
+  justify-content: center;
+}
+
+.homebutton {
+  margin: 1em;
+  font-size: 5vw;
+}
+
+.homebutton.disabled {
+  background-color: #333;
+}

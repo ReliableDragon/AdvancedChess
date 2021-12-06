@@ -36,8 +36,8 @@
             </div>
           </div>
           <div class="optiongroup">
-            <p>En Passant</p>
-            <select name="En Passant" id="enpassant">
+            <p>En Passant (WIP)</p>
+            <select name="En Passant" id="enpassant" class="setupdropdown">
               <option value='OFF'>Off</option>
               <option value='STANDARD' selected="selected">Standard</option>
               <option value='PAWNS'>Always, Pawns Only</option>
@@ -45,12 +45,36 @@
             </select>
           </div>
           <div class="optiongroup">
-            <p>Castling</p>
-            <select name="En Passant" id="enpassant">
+            <p>Castling (WIP)</p>
+            <select name="Castling" id="castling" class="setupdropdown">
               <option value='OFF'>Off</option>
               <option value='STANDARD' selected="selected">Standard</option>
               <option value='ROOKS'>Always, Rook Only</option>
               <option value='ALL'>Always, Any Piece</option>
+            </select>
+          </div>
+          <div class="optiongroup">
+            <p>Victory Condition (WIP)</p>
+            <select name="Victory Condition" id="victorycondition" class="setupdropdown">
+              <option value='STANDARD' selected="selected">Capture the King</option>
+              <option value='REGICIDAL'>Regicidal</option>
+              <option value='ECONOMIC'>Economic</option>
+              <option value='MILITARY'>Military</option>
+              <option value='RELIGIOUS'>Religious</option>
+              <option value='SIEGE'>Siege</option>
+              <option value='EXTINCTION'>Extinction</option>
+            </select>
+          </div>
+          <div class="optiongroup">
+            <p>Movement Modifiers (WIP)</p>
+            <select name="Movement Modifiers" id="movementmodifiers" class="setupdropdown">
+              <option value='STANDARD' selected="selected">Standard Movement</option>
+              <option value='TURBO'>Turbo</option>
+              <option value='SLOW'>Slow</option>
+              <option value='DOUBLE_TURNS'>Double Turns</option>
+              <option value='RANGED'>Ranged</option>
+              <option value='CAPTURES_ONLY'>Captures Only</option>
+              <option value='CHAOS'>Chaos</option>
             </select>
           </div>
           <div class="ready">

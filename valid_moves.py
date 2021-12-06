@@ -55,7 +55,7 @@ DEFAULT_MOVE_MAP = {
     },
 }
 
-# pieces: arr[dict/JSON]
+# pieces: dict{int: dict/JSON}
 # board: board.Board
 # rules: dict/JSON
 # returns: arr[dict/JSON]
@@ -63,8 +63,8 @@ def populate_valid_moves(pieces, board, rules):
     move_rules = rules['move_set']
     if move_rules == 'STANDARD':
         move_rules = DEFAULT_MOVE_MAP
-    for i, piece in enumerate(pieces):
-        pieces[i]['valid_moves'] = get_valid_moves(piece, board, move_rules)
+    for id, piece in pieces.items():
+        pieces[id]['valid_moves'] = get_valid_moves(piece, board, move_rules)
     return pieces
 # piece: dict/JSON
 # board: board.Board

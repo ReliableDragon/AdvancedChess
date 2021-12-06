@@ -38,7 +38,7 @@ def get_piece_order(ordering):
 # returns: dict/JSON (represents a chess piece)
 def generate_initial_piece(p, piece, color, i_pos, j_pos):
     return {
-        'id': f'{color}_{p}_{i_pos}{j_pos}',
+        'id': f'{color}_{p}_{i_pos}_{j_pos}',
         'icon': f'{color}_{piece}',
         'type': p,
         'color': color,
@@ -53,34 +53,39 @@ def generate_initial_piece(p, piece, color, i_pos, j_pos):
 
 # piece_ordering: str (see get_piece_order)
 # rules: dict/JSON (see default rules in game.py)
-# returns: arr[dict/JSON] (array of chess pieces)
+# returns: dict{int: dict/JSON} (dict of ids to chess pieces)
 def generate_starting_pieces(piece_ordering, rules):
-    pieces = []
+    pieces = {}
+    height = rules['height']
+    width = rules['width']
     for color in ['black', 'white']:
-        # if color == 'black':
-        #     piece_ordering = map(reversed, piece_ordering)
         for i, row in enumerate(piece_ordering):
             for j, p in enumerate(row):
-                i_pos = i if color == 'black' else rules['height'] - i - 1
+                i_pos = i if color == 'black' else height - i - 1
                 j_pos = j
+                # Don't place pieces off the board.
+                if i_pos > height - 1 or j_pos > width - 1:
+                    continue
+                # Don't place pieces on top of other pieces.
+                if [p for p in pieces.values() if p['row'] == i_pos and p['col'] == j_pos]:
+                    continue
+                # Skip blanks.
                 if p == 'X':
                     continue
                 else:
                     piece = LETTER_TO_NAME_MAP[p]
-                    pieces.append(generate_initial_piece(p, piece, color, i_pos, j_pos))
+                    initial_piece = generate_initial_piece(p, piece, color, i_pos, j_pos)
+                    pieces[initial_piece['id']] = initial_piece
     return pieces
 
-# pieces: arr[dict/JSON] (array of chess pieces)
+# pieces: dict{int: dict/JSON} (dict of ids to chess pieces)
 # rules: dict/JSON (see default rules in game.py)
 # returns: board.Board
 def generate_board(pieces, rules):
-    # board = [[None for _ in rules['width']] for _ in rules['height']]
-    # for p in pieces:
-    #     board[p.row][p.col] = Piece.Piece(p.type, p.color, p.row, p.col)
-    return board.Board(rules['width'], rules['height'], pieces)
+    return board.Board(rules['width'], rules['height'], list(pieces.values()))
 
 def populate_valid_attacks(pieces, board, rules):
-    for p in pieces:
+    for id, p in pieces.items():
         p['valid_attacks'] = get_valid_attacks(p, board, rules)
 
 def get_valid_attacks(piece, board, rules):

@@ -1,6 +1,8 @@
 from collections import defaultdict
 from ruleconverter import *
-from game import Game
+import game
+import random
+import string
 
 DEFAULT_RULES = {
     'en_passant': 'STANDARD',
@@ -23,6 +25,127 @@ class Chess():
                 ],
             'rules': DEFAULT_RULES,
         },
+        "24602": {
+            'width': 2,
+            'height': 4,
+            'pieces': {
+                'black_R_00': {
+                    'id': 'black_R_00',
+                    'icon': 'black_rook',
+                    'type': 'R',
+                    'color': 'black',
+                    'row': 0,
+                    'col': 0,
+                    'valid_moves': [],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'black_N_01': {
+                    'id': 'black_N_01',
+                    'icon': 'black_knight',
+                    'type': 'N',
+                    'color': 'black',
+                    'row': 0,
+                    'col': 1,
+                    'valid_moves': [[2, 0], [2, 0]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'black_P_10': {
+                    'id': 'black_P_10',
+                    'icon': 'black_pawn',
+                    'type': 'P',
+                    'color': 'black',
+                    'row': 1,
+                    'col': 0,
+                    'valid_moves': [[2, 1]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'black_P_11': {
+                    'id': 'black_P_11',
+                    'icon': 'black_pawn',
+                    'type': 'P',
+                    'color': 'black',
+                    'row': 1,
+                    'col': 1,
+                    'valid_moves': [[2, 0]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'white_R_30': {
+                    'id': 'white_R_30',
+                    'icon': 'white_rook',
+                    'type': 'R',
+                    'color': 'white',
+                    'row': 3,
+                    'col': 0,
+                    'valid_moves': [],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'white_N_31': {
+                    'id': 'white_N_31',
+                    'icon': 'white_knight',
+                    'type': 'N',
+                    'color': 'white',
+                    'row': 3,
+                    'col': 1,
+                    'valid_moves': [[1, 0], [1, 0]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'white_P_20': {
+                    'id': 'white_P_20',
+                    'icon': 'white_pawn',
+                    'type': 'P',
+                    'color': 'white',
+                    'row': 2,
+                    'col': 0,
+                    'valid_moves': [[1, 1]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                },
+                'white_P_21': {
+                    'id': 'white_P_21',
+                    'icon': 'white_pawn',
+                    'type': 'P',
+                    'color': 'white',
+                    'row': 2,
+                    'col': 1,
+                    'valid_moves': [[1, 0]],
+                    'valid_attacks': None,
+                    'special': None,
+                    'moves': 0,
+                    'captures': 0
+                }
+            },
+            'rules': {
+                'en_passant': 'STANDARD',
+                'starting_pieces': 'STANDARD',
+                'height': 4,
+                'width': 2,
+                'castling': 'STANDARD',
+                'move_set': 'STANDARD',
+                'valid_attacks': 'NONE',
+                'attack_set': 'STANDARD'
+            },
+            'turn': 'white'
+        }
     })
 
     rules = defaultdict(lambda: "STANDARD", {
@@ -68,11 +191,17 @@ class Chess():
         return self.games[game_id]
 
     def start_game(self, ruleset='STANDARD', named_ruleset=None):
-        id, game = None, None
+        id = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        curr_game = None
         if named_ruleset:
             print(f"Starting new game with named ruleset {named_ruleset}.")
-            id, game = Game.new_game(self.rules[named_ruleset])
+            curr_game = game.new_game(self.rules[named_ruleset])
         else:
-            id, game = Game.new_game(ruleset)
-        self.games[id] = game
+            curr_game = game.new_game(ruleset)
+        self.games[id] = curr_game
         return id
+
+    def make_move(self, game_id, move_data):
+        updated_game = game.make_move(self.games[game_id], move_data)
+        self.games[game_id] = updated_game
+        return updated_game

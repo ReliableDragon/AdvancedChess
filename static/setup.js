@@ -7,6 +7,8 @@ $(document).ready(function() {
     let width = $("#width").val();
     let en_passant = $("#enpassant").val();
     let castling = $("#castling").val();
+    let victory_condition = $("#victorycondition").val();
+    let movement_modifiers = $("#movementmodifiers").val();
 
     if (!height) {
       height = 8;
@@ -31,7 +33,9 @@ $(document).ready(function() {
       "castling": castling,
       "starting_pieces": starting_pieces,
       "height": height,
-      "width": width
+      "width": width,
+      "victory_condition": victory_condition,
+      "movement_modifiers": movement_modifiers
     };
     rules = JSON.stringify(rules_obj);
     console.log(rules);

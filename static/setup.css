@@ -54,7 +54,7 @@
   margin-bottom: 0.2em;
 }
 
-#enpassant {
+.setupdropdown {
   height: 100%;
   line-height: 50px;
   background: black;

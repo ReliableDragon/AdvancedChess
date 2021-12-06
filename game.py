@@ -41,5 +41,6 @@ class Game():
             "height": rules["height"],
             "pieces": pieces,
             "rules": rules,
+            "turn": "white",
         }
         return id, game_data

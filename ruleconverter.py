@@ -38,7 +38,7 @@ def get_piece_order(ordering):
 # returns: dict/JSON (represents a chess piece)
 def generate_initial_piece(p, piece, color, i_pos, j_pos):
     return {
-        'id': f'{color}_{p}{i_pos}{j_pos}',
+        'id': f'{color}_{p}_{i_pos}{j_pos}',
         'icon': f'{color}_{piece}',
         'type': p,
         'color': color,

@@ -76,3 +76,23 @@ html {
   top: 0px;
   left: 0px;
 }
+
+
+.game_header {
+  color: var(--main-accent-color);
+  flex-direction: row;
+  display: flex;
+  font-size: 4vw;
+  font-weight: bolder;
+  text-align: center;
+  text-shadow: -1px -1px 0 #99F, 1px -1px 0 #99F, -1px 1px 0 #99F, 1px 1px 0 #99F;
+  width: 100%;
+  white-space: nowrap;
+  vertical-align: top;
+  align-items: center;
+  justify-content: center;
+}
+
+#active_color {
+  margin-left: 0.25em;
+}

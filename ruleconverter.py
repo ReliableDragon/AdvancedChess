@@ -56,13 +56,13 @@ def generate_initial_piece(p, piece, color, i_pos, j_pos):
 # returns: arr[dict/JSON] (array of chess pieces)
 def generate_starting_pieces(piece_ordering, rules):
     pieces = []
-    for color in ['white', 'black']:
+    for color in ['black', 'white']:
         # if color == 'black':
         #     piece_ordering = map(reversed, piece_ordering)
         for i, row in enumerate(piece_ordering):
             for j, p in enumerate(row):
-                i_pos = i if color == 'white' else rules['height'] - i - 1
-                j_pos = j if color == 'white' else rules['width'] - j - 1
+                i_pos = i if color == 'black' else rules['height'] - i - 1
+                j_pos = j if color == 'black' else rules['width'] - j - 1
                 if p == 'X':
                     continue
                 else:

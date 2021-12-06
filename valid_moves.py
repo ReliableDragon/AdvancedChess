@@ -141,8 +141,8 @@ def iterate_pattern(piece, board, pattern, move, capture_only=False):
         for step in pattern:
             i += 1
             curr_pos = base.copy()
-            # Invert direction for black player
-            dy = step[0] if color == 'white' else step[0] * -1
+            # Invert direction for white player
+            dy = step[0] if color == 'black' else step[0] * -1
             dx = step[1]
             curr_pos[0] += dy
             curr_pos[1] += dx
@@ -158,9 +158,12 @@ def iterate_pattern(piece, board, pattern, move, capture_only=False):
             if board.off_board(curr_pos):
                 stopped = True
                 break
-            if is_ally(board, curr_pos, color) and not jump:
-                stopped = True
-                break
+            if is_ally(board, curr_pos, color):
+                if jump:
+                    continue
+                else:
+                    stopped = True
+                    break
             if is_enemy(board, curr_pos, color):
                 if not 'noncapturing' in move:
                     valid_moves.append(curr_pos)

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <title>Advanced Chess | New Game</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type=text/javascript src="{{ url_for('static', filename='setup.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="../static/setup.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='setup.css') }}">
+</head>
+<body>
+  <div class="mainbox">
+    <div class="startpage">
+      <div class="header">New Game</div>
+      <div class="actions">
+        <div class="creategameform">
+          <div class="optiongroup">
+            <p>Starting Pieces</p>
+            <div class="annotatedtext">
+              <input id="startingpieces" class="setupinput" placeholder="STANDARD" type="text" maxlength="1000" />
+              <a href="#" class="tooltip">
+              ?
+              <span class="tooltiptext">"Comma separated rows of pieces, using the standard abbreviations. X for no piece, STANDARD (or blank) for the normal pieces."</span>
+              </a>
+            </div>
+          </div>
+          <div class="optiongroup">
+            <p>Height</p>
+            <div class="annotatedtext">
+              <input id="height" class="setupinput" placeholder="8" min=1 max=100 type="number" />
+            </div>
+          </div>
+          <div class="optiongroup">
+            <p>Width</p>
+            <div class="annotatedtext">
+              <input id="width" class="setupinput" placeholder="8" min=1 max=100 type="number" />
+            </div>
+          </div>
+          <div class="optiongroup">
+            <p>En Passant</p>
+            <select name="En Passant" id="enpassant">
+              <option value='OFF'>Off</option>
+              <option value='STANDARD' selected="selected">Standard</option>
+              <option value='PAWNS'>Always, Pawns Only</option>
+              <option value='ALL'>Always, All Pieces</option>
+            </select>
+          </div>
+          <div class="optiongroup">
+            <p>Castling</p>
+            <select name="En Passant" id="enpassant">
+              <option value='OFF'>Off</option>
+              <option value='STANDARD' selected="selected">Standard</option>
+              <option value='ROOKS'>Always, Rook Only</option>
+              <option value='ALL'>Always, Any Piece</option>
+            </select>
+          </div>
+          <div class="ready">
+            Ready?
+          </div>
+          <div class='homebutton creationbutton' id="creategamebutton">
+            Create Game
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

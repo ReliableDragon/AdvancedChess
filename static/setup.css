@@ -1,0 +1,95 @@
+@import "style.css";
+
+:root {
+  --ready-shadow-color: #D99;
+}
+
+.creationbutton {
+  margin-top: 0.8em;
+}
+
+.ready {
+  align-content: center;
+  color: rgb(180, 0, 80);
+  display: inline-block;
+  font-size: 6vw;
+  font-weight: bolder;
+  text-align: center;
+  text-shadow: -1px -1px 0 var(--ready-shadow-color), 1px -1px 0 var(--ready-shadow-color), -1px 1px 0 var(--ready-shadow-color), 1px 1px 0 var(--ready-shadow-color);
+  width: 100%;
+  vertical-align: top;
+  margin-top: 2em;
+}
+
+.creategameform  {
+  display: flex;
+  flex-direction: column;
+}
+
+.optiongroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.optiongroup p {
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+  font-family: fantasy;
+  color: var(--main-border-color);
+  font-size: 4vw;
+  margin-bottom: 0px;
+}
+
+.setupinput {
+  height: 100%;
+  line-height: 50px;
+  background: black;
+  color: rgb(80, 111, 184);
+  font-weight: bolder;
+  font-size: 6vw;
+  width: auto;
+  max-width: 100%;
+  /* margin-top: 0.2em; */
+  margin-bottom: 0.2em;
+}
+
+#enpassant {
+  height: 100%;
+  line-height: 50px;
+  background: black;
+  color: rgb(80, 111, 184);
+  font-weight: bolder;
+  font-size: 6vw;
+  width: auto;
+  /* margin-top: 0.2em; */
+  margin-bottom: 0.2em;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    color=#FFFFFF;
+    text-decoration: none;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 170px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    right: 100%;
+    top: -50%;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

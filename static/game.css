@@ -65,3 +65,14 @@ html {
   top: 0px;
   left: 0px;
 }
+
+.active_piece {
+  opacity: 50%;
+  background: rgb(200, 190, 40);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

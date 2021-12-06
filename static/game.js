@@ -8,7 +8,7 @@ $(document).ready(function() {
   let highlight_moves = function(piece_data) {
     return function() {
       console.log(piece_data);
-      let piece_id = String(piece_data.row) + String(piece_data.column);
+      let piece_id = String(piece_data.row) + String(piece_data.col);
       if (highlighted_piece != null) {
         if (highlighted_piece == piece_id) {
           for (const id of highlighted_ids) {
@@ -24,6 +24,9 @@ $(document).ready(function() {
 
       // Nothing is already highlighted, so show moves.
       highlighted_piece = piece_id;
+      $(`#square${piece_id}`).append(`<div class=active_piece id="highlight${piece_id}"></div>`);
+      highlighted_ids.push(`highlight${piece_id}`);
+
       for (const square of piece_data.valid_moves) {
         let x = square[0];
         let y = square[1];
@@ -33,7 +36,7 @@ $(document).ready(function() {
         highlighted_ids.push(`highlight${target_id}`);
       }
 
-      if (!("valid_attacks" in piece_data)) {
+      if (!("valid_attacks" in piece_data) || !piece_data.valid_attacks) {
         return;
       }
       for (const square of piece_data.valid_attacks) {
@@ -81,9 +84,9 @@ $(document).ready(function() {
     for (const piece of pieces_data) {
       if (!(String(piece) in pieces)) {
         console.log(`Adding piece ${piece}.`)
-        id = String(piece.type) + String(piece.row) + String(piece.column);
-        let img = $(`<img id=${id} class="piece" src=/static/imgs/${piece.type}.png alt=${piece.type}>`);
-        let square = $(`#square${piece.row}${piece.column}`);
+        id = String(piece.icon) + String(piece.row) + String(piece.col);
+        let img = $(`<img id=${id} class="piece" src=/static/imgs/${piece.icon}.png alt=${piece.icon}>`);
+        let square = $(`#square${piece.row}${piece.col}`);
         square.append(img);
         square.click(highlight_moves(piece));
         pieces[JSON.stringify(piece)] = id;
@@ -97,7 +100,7 @@ $(document).ready(function() {
     update_pieces(data.pieces);
   };
 
-  $.get('/state/24601', function(data, status) {
+  $.get('/state/' + game_id, function(data, status) {
     console.log(`Status: ${status}, Data: ${data}`);
     data = JSON.parse(data);
     initial_setup(data);

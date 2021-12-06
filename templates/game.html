@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
   <title>Advanced Chess | Game {{ game_id }}</title>
+  <script>var game_id = "{{ game_id }}"</script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type=text/javascript src="{{ url_for('static', filename='game.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="../static/game.css">

@@ -62,7 +62,7 @@ def generate_starting_pieces(piece_ordering, rules):
         for i, row in enumerate(piece_ordering):
             for j, p in enumerate(row):
                 i_pos = i if color == 'black' else rules['height'] - i - 1
-                j_pos = j if color == 'black' else rules['width'] - j - 1
+                j_pos = j
                 if p == 'X':
                     continue
                 else:

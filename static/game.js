@@ -8,13 +8,9 @@ var turn = 'white';
 $(document).ready(function() {
 
   let clear_highlights = function() {
-    console.log(`Clearing highlights: ${highlighted_ids}`);
     for (const id of highlighted_ids) {
-        console.log(`Clearing highlight: ${id}`);
-        console.log($(`#${id}`));
         $(`#${id}`).prop("onclick", null).off("click");
         $(`#${id}`).remove();
-      // endturnbutton.prop("onclick", null);
     }
     highlighted_ids = [];
     highlighted_piece_id = null;
@@ -40,8 +36,6 @@ $(document).ready(function() {
         dataType: 'json',
         async: false,
         success: function(json_data) {
-            // console.log(json_data);
-            // let data = JSON.parse(msg);
             update_game(json_data);
             $('#gameboard').click(highlight_moves);
         }
@@ -87,13 +81,11 @@ $(document).ready(function() {
 
   let preview_move = function(piece_id, row, col) {
     return function() {
-      console.log("Previewing move!");
       let moving_piece_id = piece_id;
       let moving_piece = pieces[moving_piece_id];
 
       clear_highlights();
       $('#gameboard').prop("onclick", null).off("click");
-      // console.log(`${$('#gameboard').
       remove_img(moving_piece_id);
 
       // Check for captures
@@ -152,7 +144,6 @@ $(document).ready(function() {
       return;
     }
 
-    console.log("Doing some highlighting!")
     // Nothing is already highlighted, so show moves.
     highlighted_piece_id = piece_data.id;
     let piece_coord = String(piece_data.row) + "_" + String(piece_data.col);
@@ -160,7 +151,6 @@ $(document).ready(function() {
     $(`#square_${piece_coord}`).append(`<div class=active_piece id="${self_highlight_id}"></div>`);
     highlighted_ids.push(self_highlight_id);
 
-    console.log(`Valid moves: ${piece_data.valid_moves}`)
     for (const square of piece_data.valid_moves) {
       let row = square[0];
       let col = square[1];
@@ -206,7 +196,6 @@ $(document).ready(function() {
 
   let remove_img = function(existing_id) {
     let piece = pieces[existing_id];
-    console.log(`Removing piece ${piece}.`)
     let img_id = piece.img_id;
     $(`#${img_id}`).remove();
     delete piece.img_id;
@@ -269,7 +258,6 @@ $(document).ready(function() {
   }
 
   let update_game = function(data) {
-    console.log(data)
     update_pieces(data.pieces);
     update_turn(data.turn);
   }
@@ -288,7 +276,6 @@ $(document).ready(function() {
   };
 
   $.get('/state/' + game_id, function(data, status) {
-    console.log(`Status: ${status}, Data: ${data}`);
     data = JSON.parse(data);
     initial_setup(data);
   });

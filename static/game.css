@@ -7,6 +7,13 @@
 
 html {
   box-sizing: border-box;
+  overflow: auto;
+}
+
+body {
+  overflow: auto;
+  max-width: 100vh;
+  max-height: 100vh;
 }
 
 *, *:before, *:after {
@@ -14,9 +21,24 @@ html {
 }
 
 .board {
+  position: absolute;
   border: 2px solid var(--main-border-color);
-  display: flex;
+  display: grid;
   flex-direction: column;
+  overflow: auto;
+  max-width: 100vh;
+  max-height: 100vh;
+}
+
+.boardwrapper {
+    /* position: absolute; */
+    display: flex;
+    flex-direction: row;
+    display: inline-flex;
+    overflow: auto;
+    justify-content: center;
+    /* padding-bottom: 100%; */
+    aspect-ratio: 1/1;
 }
 
 .black_square {
@@ -98,20 +120,36 @@ html {
 }
 
 .game_elements {
+  position: absolute;
+  width:100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   display: inline-flex;
-  width: 100%;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  overflow: auto;
+}
+
+.playfield {
+  /* position: absolute; */
+  width:100%;
+  height: 100%;
+  display:flex;
+  flex-direction: column;
 }
 
 .controls {
-  position: relative;
+  /* position: absolute; */
   align-content: center;
   justify-content: center;
+  /* right: 0; */
+  overflow: auto;
 }
 
 .homebutton {
-  margin: 1em;
+  margin: 0.5em;
   font-size: 5vw;
 }
 

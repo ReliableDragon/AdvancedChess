@@ -21,9 +21,10 @@ class Game():
         self.winner = game_data['winner']
         self.rules = Ruleset(game_data['rules'])
         self.board = Board(self.height, self.width, game_data['board'])
-        self.move_counter = 0
+        self.move_counter = game_data['moves']
 
     def swap_turn(self):
+        print(f'Move counter: {self.move_counter}, moves per turn: {self.rules.moves_per_turn}')
         if self.move_counter % self.rules.moves_per_turn == 0:
             self.turn = SWAP_TURN[self.turn]
 
@@ -81,6 +82,7 @@ class Game():
             'board': self.board.to_json_compatible(),
             'rules': self.rules.to_json_compatible(),
             'turn': self.turn,
+            'moves': self.move_counter,
             'winner': self.winner,
         }
 
@@ -107,6 +109,7 @@ class Game():
             "board": board.to_json_compatible(),
             "rules": rules.to_json_compatible(),
             "turn": "white",
+            "moves": 0,
             "winner": "",
         }
         return game_data

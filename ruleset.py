@@ -58,7 +58,6 @@ class Ruleset():
         self.moves_per_turn = rules['moves_per_turn']
 
     def populate_move_set(self, move_set):
-        print(f"Populating move set {move_set}")
         if isinstance(move_set, dict):
             # We've already processed this.
             return move_set
@@ -122,4 +121,5 @@ class Ruleset():
                 'castling': self.castling,
                 'move_set': self.move_set,
                 'attack_set': self.attack_set,
+                'moves_per_turn': self.moves_per_turn,
             }

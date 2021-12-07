@@ -60,12 +60,12 @@ def iterate_pattern(piece, board, pattern, move, capture_only=False, ep_ok=False
     elif move['distance'][0] == 'MULTIPLESOF':
         modulus = move['distance'][1]
         min_dist = 1
-        max_dist = max(board.height, board.width)
+        max_dist = max(board.height, board.width) * len(pattern)
     else:
         min_dist = move['distance'][0]
         max_dist = move['distance'][1]
         if max_dist == 'ANY':
-            max_dist = max(board.height, board.width)
+            max_dist = max(board.height, board.width) * len(pattern)
 
     if min_dist > max_dist:
         return valid_moves

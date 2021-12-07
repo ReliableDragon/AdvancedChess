@@ -8,7 +8,8 @@ $(document).ready(function() {
     let en_passant = $("#enpassant").val();
     let castling = $("#castling").val();
     let victory_condition = $("#victorycondition").val();
-    let movement_modifiers = $("#movementmodifiers").val();
+    let move_set = $("#movementmodifiers").val();
+    let moves_per_turn = $("#movesperturn").val();
 
     if (!height) {
       height = 8;
@@ -20,6 +21,8 @@ $(document).ready(function() {
     height = Math.min(100, height);
     width = Math.max(1, width);
     width = Math.min(100, width);
+    moves_per_turn = Math.max(1, moves_per_turn);
+    moves_per_turn = Math.min(100, moves_per_turn);
     if (!starting_pieces) {
       starting_pieces = "STANDARD";
     }
@@ -35,7 +38,8 @@ $(document).ready(function() {
       "height": height,
       "width": width,
       "victory_condition": victory_condition,
-      "movement_modifiers": movement_modifiers
+      "move_set": move_set,
+      "moves_per_turn": moves_per_turn,
     };
     rules = JSON.stringify(rules_obj);
     console.log(rules);

@@ -5,6 +5,7 @@ import sys
 
 from unittest.mock import MagicMock
 from game import Game
+from move import Move
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -17,8 +18,7 @@ PAWNS_AND_KNIGHTS_RULES = """{
     "en_passant": "STANDARD",
     "starting_pieces": "XNX,XPX",
     "move_set": "STANDARD",
-    "valid_attacks": "NONE",
-    "attack_set": "STANDARD",
+    "attack_set": "NONE",
     "height": 5,
     "width": 3
 }"""
@@ -27,8 +27,7 @@ KINGS_AND_QUEENS_RULES = """{
     "en_passant": "STANDARD",
     "starting_pieces": "XKX,QXX",
     "move_set": "STANDARD",
-    "valid_attacks": "NONE",
-    "attack_set": "STANDARD",
+    "attack_set": "NONE",
     "height": 5,
     "width": 3
 }"""
@@ -37,8 +36,7 @@ BISHOPS_AND_ROOKS_RULES = """{
     "en_passant": "STANDARD",
     "starting_pieces": "RXXB,XBXX",
     "move_set": "STANDARD",
-    "valid_attacks": "NONE",
-    "attack_set": "STANDARD",
+    "attack_set": "NONE",
     "height": 5,
     "width": 4
 }"""
@@ -52,29 +50,31 @@ PAWN_CAPTURE_AND_CASTLE = """{
 class TestNewGame(unittest.TestCase):
 
     def test_pawns_noncapturing_and_basic_knights(self):
-        id, game_data = Game.new_game(PAWNS_AND_KNIGHTS_RULES)
-        valid_moves = {n['id']: n['valid_moves'] for n in game_data['pieces']}
-        self.assertEqual(
+        game_data = Game.start_new_game(PAWNS_AND_KNIGHTS_RULES)
+        valid_moves = {id: n['valid_moves'] for id, n in game_data['pieces'].items()}
+        self.assertDictEqual(
             valid_moves,
-            {'white_N01': [[2, 2], [2, 0]], 'white_P11': [[2, 1]], 'black_N41': [[2, 2], [2, 0]], 'black_P31': [[2, 1]]})
+            {'black_N_0_1': [Move((2, 0), [(1, 1), (2, 1)]), Move((2, 2), [(1, 1), (2, 1)])], 'black_P_1_1': [Move((2, 1), [])], 'white_N_4_1': [Move((2, 0), [(3, 1), (2, 1)]), Move((2, 2), [(3, 1), (2, 1)])], 'white_P_3_1': [Move((2, 1), [])]})
 
     def test_queens_and_kings(self):
-        id, game_data = Game.new_game(KINGS_AND_QUEENS_RULES)
-        valid_moves = {n['id']: n['valid_moves'] for n in game_data['pieces']}
+        game_data = Game.start_new_game(KINGS_AND_QUEENS_RULES)
+        valid_moves = {id: n['valid_moves'] for id, n in game_data['pieces'].items()}
         self.assertEqual(
             valid_moves,
-            {'white_K01': [[1, 1], [0, 2], [0, 0], [1, 2]], 'white_Q10': [[2, 0], [3, 0], [4, 0], [1, 1], [1, 2], [0, 0], [2, 1], [3, 2]], 'black_K41': [[3, 1], [4, 2], [4, 0], [3, 0]], 'black_Q32': [[2, 2], [1, 2], [0, 2], [4, 2], [3, 1], [3, 0], [2, 1], [1, 0]]})
+            {'black_K_0_1': [Move((0, 0), []), Move((1, 1), []), Move((0, 2), []), Move((1, 2), [])], 'black_Q_1_0': [Move((0, 0), []), Move((1, 1), []), Move((1, 2), [(1, 1)]), Move((2, 0), []), Move((3, 0), [(2, 0)]), Move((2, 1), []), Move((3, 2), [(2, 1)])], 'white_K_4_1': [Move((4, 0), []), Move((3, 1), []), Move((3, 2), []), Move((4, 2), [])], 'white_Q_3_0': [Move((4, 0), []), Move((1, 0), [(2, 0)]), Move((1, 2), [(2, 1)]), Move((2, 0), []), Move((2, 1), []), Move((3, 1), []), Move((3, 2), [(3, 1)])]})
 
     def test_bishops_and_rooks(self):
-        id, game_data = Game.new_game(BISHOPS_AND_ROOKS_RULES)
-        valid_moves = {n['id']: n['valid_moves'] for n in game_data['pieces']}
-        self.assertEqual(
+        game_data = Game.start_new_game(BISHOPS_AND_ROOKS_RULES)
+        valid_moves = {id: n['valid_moves'] for id, n in game_data['pieces'].items()}
+        self.assertDictEqual(
             valid_moves,
-            {'white_R00': [[1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [0, 2]], 'white_B03': [[1, 2], [2, 1], [3, 0]], 'white_B11': [[2, 2], [3, 3], [0, 2], [2, 0]], 'black_R43': [[3, 3], [2, 3], [1, 3], [0, 3], [4, 2], [4, 1]], 'black_B40': [[3, 1], [2, 2], [1, 3]], 'black_B32': [[2, 3], [4, 1], [2, 1], [1, 0]]})
+            {'black_R_0_0': [Move((0, 1), []), Move((1, 0), []), Move((2, 0), [(1, 0)]), Move((3, 0), [(1, 0), (2, 0)]), Move((0, 2), [(0, 1)]), Move((4, 0), [(1, 0), (2, 0), (3, 0)])], 'black_B_0_3': [Move((2, 1), [(1, 2)]), Move((3, 0), [(1, 2), (2, 1)]), Move((1, 2), [])], 'black_B_1_1': [Move((2, 0), []), Move((0, 2), []), Move((2, 2), []), Move((3, 3), [(2, 2)])], 'white_R_4_0': [Move((2, 0), [(3, 0)]), Move((0, 0), [(3, 0), (2, 0), (1, 0)]), Move((1, 0), [(3, 0), (2, 0)]), Move((3, 0), []), Move((4, 1), []), Move((4, 2), [(4, 1)])], 'white_B_4_3': [Move((2, 1), [(3, 2)]), Move((1, 0), [(3, 2), (2, 1)]), Move((3, 2), [])], 'white_B_3_1': [Move((2, 2), []), Move((4, 2), []), Move((1, 3), [(2, 2)]), Move((2, 0), [])]})
 
     def test_pawns_capture_and_double_move(self):
-        id, game_data = Game.new_game(PAWN_CAPTURE_AND_CASTLE)
-        valid_moves = {n['id']: n['valid_moves'] for n in game_data['pieces']}
+        game_data = Game.start_new_game(PAWN_CAPTURE_AND_CASTLE)
+        print(game_data)
+        valid_moves = {id: n['valid_moves'] for id, n in game_data['pieces'].items()}
+        print(valid_moves)
         self.assertEqual(
             valid_moves,
-            {'white_P10': [[2, 0], [3, 0], [2, 1]], 'white_P11': [[3, 1], [2, 2]], 'black_P22': [[1, 2], [0, 2], [1, 1]], 'black_P21': [[0, 1], [1, 0]]})
+            {'black_P_1_0': [Move((3, 0), [(2, 0)]), Move((2, 1), [])], 'black_P_1_1': [Move((2, 0), []), Move((3, 1), [(2, 1)])], 'white_P_2_0': [Move((1, 1), []), Move((0, 0), [(1, 0)])], 'white_P_2_1': [Move((0, 1), [(1, 1)]), Move((1, 0), [])]})

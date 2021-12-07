@@ -87,6 +87,7 @@ $(document).ready(function() {
 
   let preview_move = function(piece_id, row, col) {
     return function() {
+      console.log("Previewing move!");
       let moving_piece_id = piece_id;
       let moving_piece = pieces[moving_piece_id];
 
@@ -159,6 +160,7 @@ $(document).ready(function() {
     $(`#square_${piece_coord}`).append(`<div class=active_piece id="${self_highlight_id}"></div>`);
     highlighted_ids.push(self_highlight_id);
 
+    console.log(`Valid moves: ${piece_data.valid_moves}`)
     for (const square of piece_data.valid_moves) {
       let row = square[0];
       let col = square[1];
@@ -267,6 +269,7 @@ $(document).ready(function() {
   }
 
   let update_game = function(data) {
+    console.log(data)
     update_pieces(data.pieces);
     update_turn(data.turn);
   }

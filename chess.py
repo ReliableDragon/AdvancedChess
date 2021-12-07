@@ -1,14 +1,15 @@
 from collections import defaultdict
-from ruleconverter import *
-import game
+from game import Game
 import random
 import string
+import copy
+import pprint
 
 DEFAULT_RULES = {
     'en_passant': 'STANDARD',
     'starting_pieces': 'STANDARD',
     'move_set': 'STANDARD',
-    'attack_set': 'STANDARD',
+    'attack_set': 'NONE',
 }
 
 class Chess():
@@ -17,12 +18,17 @@ class Chess():
             'width': 8,
             'height': 8,
             'pieces': [
-                {'icon': 'white_pawn', 'type':'P', 'row': 0, 'col': 0, "valid_moves": [[0, 0]]},
-                {'icon': 'black_pawn', 'type':'P', 'row': 0, 'col': 1, "valid_moves": [[0, 0]]},
-                {'icon': 'white_queen', 'type':'Q', 'row': 1, 'col': 0, "valid_moves": [[0, 0]]},
-                {'icon': 'black_queen', 'type':'Q', 'row': 1, 'col': 1, "valid_moves": [[0, 0]]},
-                {'icon': 'white_king', 'type':'K', 'row': 7, 'col': 7, "valid_moves": [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]], "valid_attacks": [[0, 1]]},
-                ],
+                {'icon': 'white_pawn', 'type': 'P', 'row': 0,
+                 'col': 0, "valid_moves": [[0, 0]]},
+                {'icon': 'black_pawn', 'type': 'P', 'row': 0,
+                 'col': 1, "valid_moves": [[0, 0]]},
+                {'icon': 'white_queen', 'type': 'Q', 'row': 1,
+                 'col': 0, "valid_moves": [[0, 0]]},
+                {'icon': 'black_queen', 'type': 'Q', 'row': 1,
+                 'col': 1, "valid_moves": [[0, 0]]},
+                {'icon': 'white_king', 'type': 'K', 'row': 7, 'col': 7, "valid_moves": [[0, 0], [
+                    1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]], "valid_attacks": [[0, 1]]},
+            ],
             'rules': DEFAULT_RULES,
         },
         "24602": {
@@ -141,20 +147,21 @@ class Chess():
                 'width': 2,
                 'castling': 'STANDARD',
                 'move_set': 'STANDARD',
-                'valid_attacks': 'NONE',
-                'attack_set': 'STANDARD'
+                'attack_set': 'NONE',
             },
-            'turn': 'white'
+            'turn': 'white',
+            "winner": "",
         }
     })
+
+
 
     rules = defaultdict(lambda: "STANDARD", {
         "TEST": """{
             "en_passant": "STANDARD",
             "starting_pieces": "XNX,XPX",
             "move_set": "STANDARD",
-            "valid_attacks": "NONE",
-            "attack_set": "STANDARD",
+            "attack_set": "NONE",
             "height": 5,
             "width": 3
         }""",
@@ -162,8 +169,7 @@ class Chess():
             "en_passant": "STANDARD",
             "starting_pieces": "XKX,QXX",
             "move_set": "STANDARD",
-            "valid_attacks": "NONE",
-            "attack_set": "STANDARD",
+            "attack_set": "NONE",
             "height": 5,
             "width": 3
         }""",
@@ -171,8 +177,7 @@ class Chess():
             "en_passant": "STANDARD",
             "starting_pieces": "RXXB,XBXX",
             "move_set": "STANDARD",
-            "valid_attacks": "NONE",
-            "attack_set": "STANDARD",
+            "attack_set": "NONE",
             "height": 5,
             "width": 4
         }""",
@@ -188,20 +193,41 @@ class Chess():
 
     def get_state(self, game_id):
         print(f'Getting state for game id {game_id}')
-        return self.games[game_id]
+        return self.ui_translated(self.games[game_id])
+
+    def ui_translated(self, game_data):
+        ui_game_data = copy.deepcopy(game_data)
+
+        # Remove all board data except pieces
+        board_data = ui_game_data['board']
+        pieces_data = board_data['pieces']
+        ui_game_data['pieces'] = pieces_data.copy()
+        del ui_game_data['board']
+
+        # Remove paths from piece data
+        pieces_data = ui_game_data['pieces']
+        for id in pieces_data.keys():
+            piece_move_data = pieces_data[id]['valid_moves']
+            valid_move_list = [i for i, _ in piece_move_data]
+            pieces_data[id]['valid_moves'] = valid_move_list
+
+        # Remove the move set
+        del ui_game_data['rules']['move_set']
+
+        return ui_game_data
 
     def start_game(self, ruleset='STANDARD', named_ruleset=None):
+        # Choose game ID
         id = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-        curr_game = None
-        if named_ruleset:
-            print(f"Starting new game with named ruleset {named_ruleset}.")
-            curr_game = game.new_game(self.rules[named_ruleset])
-        else:
-            curr_game = game.new_game(ruleset)
+
+        curr_game = Game.start_new_game(ruleset)
+        pprint.pprint(curr_game)
+
         self.games[id] = curr_game
         return id
 
     def make_move(self, game_id, move_data):
-        updated_game = game.make_move(self.games[game_id], move_data)
+        game = Game(self.games[game_id])
+        updated_game = game.make_move(move_data)
         self.games[game_id] = updated_game
-        return updated_game
+        return self.ui_translated(updated_game)

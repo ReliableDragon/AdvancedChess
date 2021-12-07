@@ -36,7 +36,13 @@
             </div>
           </div>
           <div class="optiongroup">
-            <p>En Passant (WIP)</p>
+            <p>Moves per Turn</p>
+            <div class="annotatedtext">
+              <input id="movesperturn" class="setupinput" placeholder="1" min=1 max=100 type="number" />
+            </div>
+          </div>
+          <div class="optiongroup">
+            <p>En Passant</p>
             <select name="En Passant" id="enpassant" class="setupdropdown">
               <option value='OFF'>Off</option>
               <option value='STANDARD' selected="selected">Standard</option>
@@ -66,14 +72,13 @@
             </select>
           </div>
           <div class="optiongroup">
-            <p>Movement Modifiers (WIP)</p>
+            <p>Movement Modifiers</p>
             <select name="Movement Modifiers" id="movementmodifiers" class="setupdropdown">
               <option value='STANDARD' selected="selected">Standard Movement</option>
               <option value='TURBO'>Turbo</option>
               <option value='SLOW'>Slow</option>
-              <option value='DOUBLE_TURNS'>Double Turns</option>
-              <option value='RANGED'>Ranged</option>
               <option value='CAPTURES_ONLY'>Captures Only</option>
+              <option value='JUMPY'>Jumpy</option>
               <option value='CHAOS'>Chaos</option>
             </select>
           </div>

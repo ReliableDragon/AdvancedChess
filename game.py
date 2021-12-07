@@ -1,102 +1,112 @@
-from ruleconverter import *
-import string
-import json
-import valid_moves
+from board import Board
+from ruleset import Ruleset
 import coord
-from invalid_move_error import InvalidMoveError
+import piece_generator
+import valid_move_helper
+import string
+import pprint
 
-DEFAULT_RULES = {
-    "en_passant": "STANDARD",
-    "castling": "STANDARD",
-    "starting_pieces": "STANDARD",
-    "move_set": "STANDARD",
-    "valid_attacks": "NONE",
-    "attack_set": "STANDARD",
-    "victory_condition": "STANDARD",
-    "movement_modifiers": "STANDARD",
-    "height": 8,
-    "width": 8,
-}
+from invalid_move_error import InvalidMoveError
 
 SWAP_TURN = {
     'white': 'black',
     'black': 'white',
 }
 
-# class Game():
-#     def __init__(self, game_data):
-#         self.width = game_data['width']
-#         self.height = game_data['height']
+class Game():
+    def __init__(self, game_data):
+        self.width = game_data['width']
+        self.height = game_data['height']
+        self.turn = game_data['turn']
+        self.winner = game_data['winner']
+        self.rules = Ruleset(game_data['rules'])
+        self.board = Board(self.height, self.width, game_data['board'])
+        self.move_counter = 0
+
+    def swap_turn(self):
+        if self.move_counter % self.rules.moves_per_turn == 0:
+            self.turn = SWAP_TURN[self.turn]
 
 
-def update_board(piece_data, rules):
-    board = generate_board(piece_data, rules)
-    piece_data = valid_moves.populate_valid_moves(piece_data, board, rules)
-    populate_valid_attacks(piece_data, board, rules)
+    # game_data: dict/JSON{int: dict/JSON} (id to piece dict)
+    # move_data: dict/JSON
+    # returns: dict/JSON (updated game_data)
+    def make_move(self, move_data):
+        self.move_counter += 1
+        # Extract salient data
+        moving_piece_id = move_data['piece_id']
+        row = move_data['row']
+        col = move_data['col']
+        # piece_data = game_data['pieces']
+        moving_piece = self.board.get_id(moving_piece_id)
+        valid_moves = moving_piece.valid_moves
 
-    return piece_data
+        if moving_piece.color != self.turn:
+            raise InvalidMoveError("Wrong color! It's not your turn!")
 
-# rules: dict/JSON (see example above)
-# returns: (int, dict/JSON) (game ID, and dict containing all data about the game, to save in Firebase)
-def new_game(rules):
-    if rules == "STANDARD":
-        rules = DEFAULT_RULES
-    else:
-        rules = json.loads(rules)
-        for k, v in DEFAULT_RULES.items():
-            if k not in rules.keys():
-                rules[k] = v
-    # JSON operations
-    piece_ordering = get_piece_order(rules["starting_pieces"])
-    pieces = generate_starting_pieces(piece_ordering, rules)
-    # Python type operations
-    pieces = update_board(pieces, rules)
-    # board = generate_board(pieces, rules)
-    # pieces = valid_moves.populate_valid_moves(pieces, board, rules)
-    # populate_valid_attacks(pieces, board, rules)
+        valid_moves_list = [v for v in valid_moves if v.row == row and v.col == col]
+        if not valid_moves_list:
+            print(f"Attempted to move to {[row, col]}, when valid spaces were {valid_moves}")
+            raise InvalidMoveError("Invalid move!")
+        taken_move = valid_moves_list[0]
 
-    game_data = {
-        "width": rules["width"],
-        "height": rules["height"],
-        "pieces": pieces,
-        "rules": rules,
-        "turn": "white",
-        "winner": "",
-    }
-    return game_data
+        # Will be empty if no captures
+        captured_piece_id = self.board.capture_at((row, col))
+        if captured_piece_id is not None:
+            moving_piece.captures += 1
+            self.board.remove_piece(captured_piece_id)
 
-# game_data: dict/JSON{int: dict/JSON} (id to piece dict)
-# move_data: dict/JSON
-# returns: dict/JSON (updated game_data)
-def make_move(game_data, move_data):
-    # Extract salient data
-    moving_piece_id = move_data['piece_id']
-    moving_to = [move_data['row'], move_data['col']]
-    piece_data = game_data['pieces']
-    moving_piece = piece_data[moving_piece_id]
-    valid_moves = moving_piece['valid_moves']
+        # Update piece's position
+        self.board.move_piece(moving_piece_id, row, col)
+        moving_piece.moves += 1
 
-    if moving_piece['color'] != game_data['turn']:
-        raise InvalidMoveError("Wrong color! It's not your turn!")
+        # Reset path for en passant
+        self.board.remove_en_passant_path()
+        if self.rules.can_be_en_passanted(moving_piece.type):
+            self.board.add_en_passant_path(taken_move.path)
 
-    if not moving_to in valid_moves:
-        print(f"Attempted to move to {moving_to}, when valid spaces were {valid_moves}")
-        raise InvalidMoveError("Invalid move!")
+        for piece in self.board.pieces:
+            en_passant_allowed = self.rules.can_do_en_passant(piece.type)
+            piece.valid_moves = valid_move_helper.get_valid_moves_for_piece(piece, self.board, self.rules.move_set, en_passant_allowed)
 
-    # Will be empty if no captures
-    captured_pieces = [id for id, piece in game_data['pieces'].items() if [piece['row'], piece['col']] == moving_to]
-    for id in captured_pieces:
-        moving_piece['captures'] += 1
-        del piece_data[id]
+        # Update board and regenerate valid moves, then return it
+        # pieces = update_board(piece_data, game_data['rules'])
+        self.swap_turn()
+        return self.get_game_data()
 
-    # Update piece's position
-    moving_piece['row'] = move_data['row']
-    moving_piece['col'] = move_data['col']
-    moving_piece['moves'] += 1
-    piece_data[moving_piece_id] = moving_piece
+    def get_game_data(self):
+        return {
+            'width': self.width,
+            'height': self.height,
+            'board': self.board.to_json_compatible(),
+            'rules': self.rules.to_json_compatible(),
+            'turn': self.turn,
+            'winner': self.winner,
+        }
 
-    # Update board and regenerate valid moves, then return it
-    pieces = update_board(piece_data, game_data['rules'])
-    game_data['pieces'] = pieces
-    game_data['turn'] = SWAP_TURN[game_data['turn']]
-    return game_data
+    # rules: dict/JSON (see example above)
+    # returns: (int, dict/JSON) (game ID, and dict containing all data about the game, to save in Firebase)
+    # When starting a new game, there's no game_data to load from, so we use a static method.
+    @staticmethod
+    def start_new_game(rule_data):
+        print("Starting new game with ruleset:")
+        pprint.pprint(rule_data)
+        rules = Ruleset(rule_data)
+
+        # generated_piece_data = piece_generator.generate_starting_pieces(rules.height, rules.width, rules.starting_pieces)
+
+        board = Board.from_starting_pieces(rules.height, rules.width, rules.starting_pieces)
+        # board = Board(rules.height, rules.width, generated_piece_data)
+        for piece in board.pieces:
+            en_passant_allowed = rules.can_do_en_passant(piece.type)
+            piece.valid_moves = valid_move_helper.get_valid_moves_for_piece(piece, board, rules.move_set, en_passant_allowed)
+
+        game_data = {
+            "width": rules.width,
+            "height": rules.height,
+            "board": board.to_json_compatible(),
+            "rules": rules.to_json_compatible(),
+            "turn": "white",
+            "winner": "",
+        }
+        return game_data

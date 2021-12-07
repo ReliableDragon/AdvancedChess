@@ -29,21 +29,26 @@ def setup_game(ruleset=None):
     return render_template('setup.html')
 
 @app.route("/start/", methods=['POST'])
-def start_game(ruleset=None):
-    # We accept non-JSON responses in case the rules are "STANDARD".
-    rules = request.get_data()
-    game_id = chess.start_game(rules)
+def start_game():
+    ruleset = None
+    if request.get_data(as_text=True) == "STANDARD":
+        ruleset = "STANDARD"
+    else:
+        if not request.is_json:
+            return f"Received a non-JSON payload: {request.get_data()}"
+        ruleset = request.get_json()
+    game_id = chess.start_game(ruleset)
     return json.dumps({'game_id': game_id}), 200
 
-@app.route("/start_demo/")
-@app.route("/start_demo/<string:ruleset>")
-def start_demo_game(ruleset=None):
-    if ruleset == None:
-        return render_template('bad_game.html', game_id=game_id)
-    game_id = chess.start_game(named_ruleset=ruleset)
-    # Temporary hack while we're abusing the game ID box for rulesets
-    # Remove start method and merge with play once rulepicker is in place.
-    return redirect(f'/play/{game_id}')
+# @app.route("/start_demo/")
+# @app.route("/start_demo/<string:ruleset>")
+# def start_demo_game(ruleset=None):
+#     if ruleset == None:
+#         return render_template('bad_game.html', game_id=game_id)
+#     game_id = chess.start_game(named_ruleset=ruleset)
+#     # Temporary hack while we're abusing the game ID box for rulesets
+#     # Remove start method and merge with play once rulepicker is in place.
+#     return redirect(f'/play/{game_id}')
 
 @app.route("/play/")
 @app.route("/play/<string:game_id>")
